@@ -1,0 +1,58 @@
+app:
+  name: "Mal Islamic Finance RAG Assistant"
+  version: "1.0.0"
+  supported_languages: ["en", "ar"]
+
+server:
+  env: "development"
+  port: 8000
+  log_level: "INFO"
+
+llm:
+  provider: "google"  # Options: openai, google
+  base_url: null # "https://openrouter.ai/api/v1"
+  model_name: "gemma-4-31b-it"  # OpenAI: gpt-5-mini-2025-08-07 / Gemini: gemma-4-26b-a4b-it
+  temperature: 0.1
+  max_tokens: 4000
+  enable_reasoning: false
+
+vector_store:
+  provider: "chroma"
+  collection_name: "sharia_knowledge_base"
+  embedding_provider: "google_gemini"  # Options: sentence_transformer, google_gemini
+  embedding_model: "gemini-embedding-001"  # Options: gemini-embedding-001, text-embedding-004
+  top_k: 3
+  similarity_threshold: 0.35
+  enable_chroma_download: true
+
+pii:
+  engine: "aajil"
+  default_language: "en"
+  supported_languages: ["en", "ar"]
+  ner_model: "xx_ent_wiki_sm"
+  custom_recognizers:
+    - name: "EMIRATES_ID"
+      regex: '784-\d{4}-\d{7}-\d{1}'
+      score: 0.95
+    - name: "UAE_IBAN"
+      regex: 'AE\d{21}'
+      score: 0.95
+    - name: "ACCOUNT_NUMBER"
+      regex: '\b\d{10,14}\b'
+      score: 0.85
+
+guardrails:
+  enabled: true
+  classifier_type: "llm_hybrid"
+  similarity_threshold: 0.35
+  refusal_message_en: "I apologize, but I can only answer questions related to Islamic finance and Sharia compliance rules for Mal customers."
+  refusal_message_ar: "أعتذر، يمكنني فقط الإجابة على الأسئلة المتعلقة بالتمويل الإسلامي وأحكام الشريعة لعملاء مال."
+
+session:
+  provider: "in_memory"
+  max_history_turns: 5
+
+eval:
+  enabled: true
+  sample_rate: 1.0
+  async_eval: false
