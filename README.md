@@ -25,18 +25,6 @@ The project uses a **three-layer configuration** architecture:
 | `config/config.yaml` | **Single source of truth** — all non-secret settings (server, LLM provider, vector store & embedding provider, PII, guardrails, eval) |
 | `config/prompts.yaml` | **All LLM prompts** — chat system prompt, scope guard classifier, LLM judge evaluation prompt |
 
-### Vector Store & Embedding Options in `config/config.yaml`:
-```yaml
-vector_store:
-  provider: "chroma"
-  collection_name: "sharia_knowledge_base"
-  embedding_provider: "google_gemini"  # Options: google_gemini, sentence_transformer
-  embedding_model: "gemini-embedding-001"  # Options: gemini-embedding-001, sentence-transformers/LaBSE
-  top_k: 3
-  similarity_threshold: 0.35
-  enable_chroma_download: true
-```
-
 ---
 
 ## Quickstart
@@ -61,7 +49,11 @@ uv run uvicorn src.api.main:app --reload --port 8000
 
 ### 4. Run Automated Evaluation Tests
 ```bash
+# Standard verbose test execution
 uv run pytest -v tests/
+
+# Live formatted output (shows redacted PII, refusal responses, multi-turn logs)
+uv run pytest -sv tests/
 ```
 
 ---
@@ -181,12 +173,3 @@ curl "http://localhost:8000/health"
 └── pyproject.toml
 ```
 
----
-
-## Deployment (Railway / Render / Fly.io)
-
-### Docker Deployment
-```bash
-docker build -t mal-assistant-api .
-docker run -p 8000:8000 --env-file .env mal-assistant-api
-```
