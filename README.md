@@ -15,6 +15,16 @@ Production-ready RAG Assistant REST API for Mal customers querying Sharia financ
 
 ---
 
+## System Architecture & Sequence Diagrams
+
+### System Architecture & Data Flow
+![System Architecture & Data Flow Diagram](./docs/assets/system_arch.png)
+
+### Request Processing Sequence Diagram
+![Request Processing Sequence Diagram](./docs/assets/sequence_diagram.svg)
+
+---
+
 ## Configuration
 
 The project uses a **three-layer configuration** architecture:
